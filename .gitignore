@@ -1,2 +1,7 @@
 # Project exclude paths
 /cmake-build-debug/
+.vscode/
+.build/
+.cmake-build-debug/
+.ms-quick.pro.user
+
