@@ -1,0 +1,34 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/main.qml</file>
+        <file>qml/Home/Home.qml</file>
+        <file>qml/Home/HomeLeftMenu.qml</file>
+        <file>qml/Home/HomeContent.qml</file>
+        <file>qml/Home/Message.qml</file>
+        <file>qml/Home/Email.qml</file>
+        <file>qml/Home/PluginsManager.qml</file>
+        <file>qml/Home/MainContent.qml</file>
+        <file>qml/Home/Task.qml</file>
+        <file>qml/Tray.qml</file>
+        <file>qml/Loading.qml</file>
+        <file>qml/Login/ImageBackColor.qml</file>
+        <file>qml/Login/LoginHomeBack.qml</file>
+        <file>qml/Login/Loading.qml</file>
+        <file>qml/Login/LoginHomeButton.qml</file>
+        <file>qml/Login/Logining.qml</file>
+        <file>qml/Login/LoginHome.qml</file>
+        <file>qml/Login/LoginHomeField.qml</file>
+        <file>qml/Toast.qml</file>
+        <file>qml/IM/RoomListView.qml</file>
+        <file>qml/Home/Organization.qml</file>
+        <file>qml/Home/Shop.qml</file>
+        <file>qml/Home/Bar.qml</file>
+        <file>qml/Home/Coffee.qml</file>
+        <file>qml/Home/AddressBook.qml</file>
+        <file>qml/Home/DepartmentKnowledge.qml</file>
+        <file>qml/Home/CompanyKnowledge.qml</file>
+        <file>qml/Home/PersonalInformation.qml</file>
+        <file>qml/Home/TeaDrink.qml</file>
+        <file>qml/IM/Navigation.qml</file>
+    </qresource>
+</RCC>

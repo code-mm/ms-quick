@@ -1,0 +1,16 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/img_im.png</file>
+        <file>images/img_plugin_manager.png</file>
+        <file>images/img_email.png</file>
+        <file>images/img_info.png</file>
+        <file>images/img_back1.jpg</file>
+        <file>images/img_qrcode.png</file>
+        <file>images/img_icon.png</file>
+        <file>images/img_icon_blue.png</file>
+        <file>images/favicon.ico</file>
+        <file>images/img_default.png</file>
+        <file>images/img_buddy.png</file>
+        <file>images/img_room.png</file>
+    </qresource>
+</RCC>
