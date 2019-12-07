@@ -3,7 +3,7 @@
 #include <string>
 namespace Logger
 {
-    const static QString logTemplate = u8R"logTemplate(
+const static QString logTemplate = u8R"logTemplate(
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
@@ -86,7 +86,7 @@ namespace Logger
 </head>
 
 <body>
-    <h1><a href="https://jaredtao.github.io">TaoLogger</a> 日志文件</h1>
+    <h1><a href="#">程序日志</a> 日志文件</h1>
     <script type="text/JavaScript">
         function objHide(obj) {
             obj.style.display="none"

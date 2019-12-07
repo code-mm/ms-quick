@@ -12,5 +12,9 @@
         <file>images/img_default.png</file>
         <file>images/img_buddy.png</file>
         <file>images/img_room.png</file>
+        <file>images/img_emoji.png</file>
+        <file>images/img_file.png</file>
+        <file>images/img_video.png</file>
+        <file>images/img_voice.png</file>
     </qresource>
 </RCC>

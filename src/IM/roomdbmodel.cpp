@@ -1,35 +1,31 @@
+#include <src/common.h>
 #include "roomdbmodel.h"
 
 RoomDBModel::RoomDBModel()
 {
 
-    if (QSqlDatabase::database().tables().contains("_room")) {
-        qDebug()<<"_room 连接成功";
-        refresh();
-        return;
-    }
-    else
+    if (QSqlDatabase::database().tables().contains(_TABLE_NAME_ROOM_))
     {
-        qDebug()<< " _room 连接失败 ";
-        qDebug()<< " 创建房间表 ";
+        qDebug() << _TABLE_NAME_ROOM_ << " 连接成功";
+
+        initModel();
+
+        return;
+    } else
+    {
+        qDebug() << _TABLE_NAME_ROOM_ << "  连接失败 ";
+        qDebug() << " 创建房间表 ";
         QSqlQuery sqlQuery;
         //member_1name 如果房间名称为空，说明是两个人对话，去除里面成员的姓名
-        if(sqlQuery.exec(
-                "create table if not exists _room"
-                "("
-                " id       integer primary key autoincrement,"
-                " roomid   varchar(64),"
-                " name  varchar(256),"
-                " avatar   varchar(1024),"
-                " membercount     intger,"
-                " member_1name     varchar(256)"
-                " )"
-                ))
+        if (sqlQuery.exec(_CREATE_TABLE_ROOM_))
         {
-            qDebug()<<"创建成功" ;
-        }else{
-            qDebug()<<"创建失败"<<sqlQuery.lastError().text();
+            qDebug() << _CREATE_TABLE_ROOM_ << " 创建成功 ";
+        } else
+        {
+            qDebug() << _CREATE_TABLE_ROOM_ << " 创建失败 " << sqlQuery.lastError().text();
         }
+
+        initModel();
     }
 }
 
@@ -37,120 +33,210 @@ RoomDBModel::RoomDBModel()
 QHash<int, QByteArray> RoomDBModel::roleNames() const
 {
     QHash<int, QByteArray> roles;
-    roles[id] = "id";
-    roles[roomid] = "roomid";
-    roles[name] = "name";
-    roles[avatar] = "avatar";
-    roles[membercount] = "membercount";
-    roles[member_1name] = "member_1name";
+    roles[_id] = "_id";
+    roles[_roomid] = "_roomid";
+    roles[_name] = "_name";
+    roles[_avatar] = "_avatar";
+    roles[_membercount] = "_membercount";
+    roles[_member_1name] = "_member_1name";
     return roles;
 }
 
-void RoomDBModel::refresh()
-{
-    setQuery("select * from _room where name != '' ");
-}
-
-void RoomDBModel::insert(QMatrixClient::Room *room,QMatrixClient::Connection *connection)
-{
-
-    bool exists=checkRoomExists(room->id());
-
-    if(room->name()==nullptr||room->name()=="")
-    {
-
-        qDebug()<<"房间名称为空 两人对话: ";
-
-        // 如果房间名称为空
-        auto r= connection->room(room->id());
-        QString member_1name =  r->memberNames().value(0);
-
-        if(exists)
-        {
-            qDebug()<<"房间已经存在 更新信息";
-            // 有 更新
-            QString sql = "update _room set name='"+room->name()+"',avatar='"+room->avatarUrl().toString()+"',membercount="+QString::number(  room->memberCount())+" member_1name = '"+member_1name+"' where roomid = '"+room->id()+"'";
-            qDebug()<<"sql : "<<sql;
-            setQuery(sql);
-        }
-        else{
-            qDebug()<<"房间不存在 插入";
-            // 没有 插入
-            QString sql = "insert into _room(roomid,name,avatar,membercount,member_1name) values('"+room->id()+"','"+room->name()+"','"+room->avatarUrl().toString()+"',"+QString::number(room->memberCount())+", '"+member_1name+"')";
-            qDebug()<<"sql : "<<sql;
-            setQuery(sql);
-        }
-    }
-    else
-    {
-        if(exists)
-        {
-            qDebug()<<"房间已经存在 更新信息";
-            // 有 更新
-            QString sql = "update _room set name='"+room->name()+"',avatar='"+room->avatarUrl().toString()+"',membercount="+QString::number(  room->memberCount())+" where roomid = '"+room->id()+"'";
-            qDebug()<<"sql : "<<sql;
-            setQuery(sql);
-        }
-        else{
-            qDebug()<<"房间不存在 插入";
-            // 没有 插入
-            QString sql = "insert into _room(roomid,name,avatar,membercount) values('"+room->id()+"','"+room->name()+"','"+room->avatarUrl().toString()+"',"+QString::number(room->memberCount())+")";
-            qDebug()<<"sql : "<<sql;
-            setQuery(sql);
-        }
-
-
-    }
-
-}
-
-void RoomDBModel::loadRoom()
-{
-    setQuery("select  * from _room where name!=''");
-}
-
-void RoomDBModel::loadBuddy()
-{
-    setQuery("select  * from _room where name==''");
-}
-
-// 检查房间是否存在
-bool RoomDBModel::checkRoomExists(QString roomid)
-{
-    QSqlQuery result=query();
-    result.exec("select roomid from _room");
-    QList<QString> list;
-    while(result.next())
-    {
-        QString rid= result.value(0).toString();
-        list.append(rid);
-    }
-
-    for(auto it : list)
-    {
-        if(it==roomid)
-        {
-            return true;
-        }
-    }
-    return  false;
-}
 
 QVariant RoomDBModel::data(const QModelIndex &index, int role) const
 {
-    //qDebug()<<" index : "<<index <<"   role : "<<role;
     QVariant value = QSqlQueryModel::data(index, role);
-    if(role < Qt::UserRole)
+    if (role < Qt::UserRole)
     {
-        // qDebug()<<" if : ";
         value = QSqlQueryModel::data(index, role);
-    }
-    else
+    } else
     {
-        //qDebug()<<" else : ";
         int columnIdx = role - Qt::UserRole - 1;
         QModelIndex modelIndex = this->index(index.row(), columnIdx);
         value = QSqlQueryModel::data(modelIndex, Qt::DisplayRole);
     }
     return value;
 }
+
+
+void RoomDBModel::refresh()
+{
+    setQuery("select * from _room where _name != '' ");
+}
+
+void RoomDBModel::initModel()
+{
+    setQuery("select * from _room where _name != '' ");
+}
+
+void RoomDBModel::insert(QMatrixClient::Room *room, QMatrixClient::Connection *connection)
+{
+
+
+    QString roomId = room->id();
+    QString roomName = room->name();
+    QString roomVersion = room->version();
+    QString avatar = room->avatarUrl().toString();
+    QString roomTopic = room->topic();
+    int roomMemberCount = room->memberCount();
+    QString roomMemberName = room->memberNames().value(0);
+
+    // 检查房间是否存在
+    bool roomExists = checkRoomExists(room->id());
+    // 检查房间名称是否为空
+    bool roomNameNull = room->name() == nullptr || room->name() == "";
+
+    QString sql;
+
+    // 数据库中没有房间信息
+    if (!roomExists)
+    {
+        // 更新数据库信息
+        if (roomNameNull)
+        {
+
+
+            //            insert into _room(_roomid, _name, _avatar, _membercount, _member_1name, _base_server, _room_version)
+            //            values ('', '', '', 1, '', '', '');
+
+            // 两个人房间
+            sql = "insert into _room "
+                  "("
+                  " _roomid , "
+                  " _name , "
+                  " _avatar , "
+                  " _membercount , "
+                  " _member_1name , "
+                  " _base_server , "
+                  " _room_version  "
+                  ")"
+                  "values"
+                  "("
+                  "'" + roomId + "',"
+                             "'" + roomName + "',"
+                               "'" + avatar + "',"
+                             "" + QString::number(roomMemberCount) + ","
+                                                       "'" +
+                  roomMemberName + "',"
+                                   "'" +
+                  Common::getInstance()->getBaseUrl() + "',"
+                                                        "'" + roomVersion + "'"
+                                  ")";
+        } else
+        {
+            // 多人房间
+            // 两个人房间
+            sql = "insert into _room "
+                  "("
+                  " _roomid , "
+                  " _name , "
+                  " _avatar , "
+                  " _membercount , "
+                  " _member_1name , "
+                  " _base_server , "
+                  " _room_version  "
+                  ")"
+                  "values"
+                  "("
+                  "'" + roomId + "',"
+                             "'" + roomName + "',"
+                               "'" + avatar + "',"
+                             "" + QString::number(roomMemberCount) + ","
+                                                       "'" +
+                  roomMemberName + "',"
+                                   "'" +
+                  Common::getInstance()->getBaseUrl() + "',"
+                                                        "'" + roomVersion + "'"
+                                  ")";
+
+        }
+    }
+
+    // 房间已经存在数据库
+    else
+    {
+        // 将数据插入数据库
+        if (roomNameNull)
+        {
+            // 两个人房间
+            //            update _room
+            //            set _roomid='',
+            //                    _name='',
+            //                    _avatar='',
+            //                    _membercount=1,
+            //                    _member_1name='',
+            //                    _base_server='',
+            //                    _room_version=''
+            //            where _roomid = '';
+
+
+
+            sql = "update _room set "
+                  " _roomid = '" + roomId + "' ,"
+                             " _name = '" + roomName + "' ,"
+                               " _avatar = '" + avatar + "' ,"
+                             " _membercount = " +
+                  QString::number(roomMemberCount) + " ,"
+                                                     " _member_1name = '" + roomMemberName + "' ,"
+                                     " _base_server = '" +
+                  Common::getInstance()->getBaseUrl() + "' ,"
+                                                        " _room_version = '" + roomVersion + "' "
+                                  " where _roomid= '" + roomId + "'";
+
+        } else
+        {
+            // 多人房间
+            sql = "update _room set "
+                  " _roomid = '" + roomId + "' ,"
+                             " _name = '" + roomName + "' ,"
+                               " _avatar = '" + avatar + "' ,"
+                             " _membercount = " +
+                  QString::number(roomMemberCount) + " ,"
+                                                     " _member_1name = '" + roomMemberName + "' ,"
+                                     " _base_server = '" +
+                  Common::getInstance()->getBaseUrl()  + "' ,"
+                                                        " _room_version = '" + roomVersion + "' "
+                                  " where _roomid= '" + roomId + "'";
+        }
+
+    }
+
+
+    qDebug() << " _room sql : " << sql;
+    setQuery(sql);
+    refresh();
+}
+
+// 加载房间
+void RoomDBModel::loadRoom()
+{
+    setQuery("select  * from _room where _name!=''");
+}
+
+// 加载成员
+void RoomDBModel::loadBuddy()
+{
+    setQuery("select  * from _room where _name==''");
+}
+
+// 检查房间是否存在
+bool RoomDBModel::checkRoomExists(QString roomid)
+{
+    QSqlQuery result = query();
+    result.exec("select _roomid from _room");
+    QList<QString> list;
+    while (result.next())
+    {
+        QString rid = result.value(0).toString();
+        list.append(rid);
+    }
+    for (auto it : list)
+    {
+        if (it == roomid)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+

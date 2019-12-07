@@ -1,13 +1,14 @@
-QT += core
-QT += gui
-QT += sql
-QT += network
-QT += widgets
-QT += qml
-QT += quick
-QT += webengine
-QT += webchannel
-QT += webenginewidgets
+QT      += core
+QT      += gui
+QT      += sql
+QT      += network
+QT      += widgets
+QT      += qml
+QT      += quick
+QT      += webengine
+QT      += webchannel
+QT      += webenginewidgets
+QT      += multimedia
 
 CONFIG += c++14
 
@@ -24,9 +25,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         src/IM/im.cpp \
+        src/IM/immediaaudio.cpp \
         src/IM/message.cpp \
         src/IM/messagedbmodel.cpp \
         src/IM/roomdbmodel.cpp \
+        src/IM/roommemberdbmodel.cpp \
         src/IM/user.cpp \
         src/IM/userdb.cpp \
         src/Utils/logutils.cpp \
@@ -39,7 +42,8 @@ SOURCES += \
         src/Logger/Logger.cpp
 
 RESOURCES += qml.qrc \
-    images.qrc
+    images.qrc \
+    media.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
@@ -54,9 +58,12 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     src/IM/im.h \
+    src/IM/immediaaudio.h \
     src/IM/message.h \
     src/IM/messagedbmodel.h \
     src/IM/roomdbmodel.h \
+    src/IM/roommemberdbmodel.h \
+    src/IM/sqlconstant.h \
     src/IM/user.h \
     src/IM/userdb.h \
     src/Utils/logutils.h \

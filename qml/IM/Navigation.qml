@@ -6,6 +6,14 @@ Rectangle{
     height: parent.height
     color: "#11ffaa"
 
+
+
+    property alias roomColor: rectangleRoom.color
+    property alias buddyColor: rectangleBuddy.color
+
+
+
+
     //  回调函数
     signal changeItem(int position)
 
@@ -17,7 +25,7 @@ Rectangle{
             id:rectangleRoom
             width: parent.width/2
             height: parent.height
-            color: "#aaff00"
+            color: "#ff00ff"
 
             Column{
                 width: 100
@@ -45,13 +53,13 @@ Rectangle{
                     rectangleNavigation.changeItem(0)
                 }
 
-                onEntered: {
-                    rectangleRoom.color="#ff0055"
-                }
+//                onEntered: {
+//                    rectangleRoom.color="#ff00ff"
+//                }
 
-                onExited: {
-                    rectangleRoom.color="#aaff00"
-                }
+//                onExited: {
+//                    rectangleRoom.color="#aaff00"
+//                }
             }
         }
 
@@ -59,7 +67,7 @@ Rectangle{
             id:rectangleBuddy
             width: parent.width/2
             height: parent.height
-            color: "#00ffaa"
+            color: "#11ffaa"
             Column{
                 anchors.centerIn: parent
                 width: 100
@@ -84,12 +92,12 @@ Rectangle{
                 onClicked: {
                     rectangleNavigation.changeItem(1)
                 }
-                onEntered: {
-                    rectangleBuddy.color="#ff0055"
-                }
-                onExited: {
-                    rectangleBuddy.color="#aaff00"
-                }
+//                onEntered: {
+//                    rectangleBuddy.color="#ff00ff"
+//                }
+//                onExited: {
+//                    rectangleBuddy.color="#aaff00"
+//                }
             }
         }
     }

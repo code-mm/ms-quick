@@ -40,6 +40,8 @@ private:
     bool savePassword;
     // 是否自动登录
     bool autoLogin;
+    // 最后更新时间
+    int lasterUpdateTime;
 
 };
 

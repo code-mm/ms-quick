@@ -26,29 +26,65 @@
 #include "csapi/leaving.h"
 #include "events/simplestateevents.h"
 #include "events/eventloader.h"
+#include "sqlconstant.h"
+
+
+//CREATE TABLE _room
+//(
+//        _id           integer primary key autoincrement,
+//        _roomid       varchar(64),
+//_name         varchar(256),
+//        _avatar       varchar(1024),
+//_membercount  intger,
+//        _member_1name varchar(256)
+//);
+
+
+
+
+
+// 创建表语句
+const static QString _CREATE_TABLE_ROOM_ = "CREATE TABLE _room"
+                                           "("
+                                           "    _id           integer primary key autoincrement,    "
+                                           "    _roomid       varchar(64),                          "
+                                           "    _name         varchar(256),                         "
+                                           "    _avatar       varchar(1024),                        "
+                                           "    _membercount  intger,                               "
+                                           "    _member_1name varchar(256) ,                        "
+                                           "    _base_server  varchar(256) ,                        "
+                                           "    _room_version varchar(32)                           "
+                                           ")";
+
+
+const static QString _TABLE_NAME_ROOM_ = "_room";
+
+
 
 
 class RoomDBModel : public QSqlQueryModel
 {
-    Q_OBJECT
+Q_OBJECT
 public:
+    RoomDBModel();
 
     enum RoomRoles
     {
-        id = Qt::UserRole + 1,//257
+        _id = Qt::UserRole + 1,//257
         // 房间ID
-        roomid,
+        _roomid,
         // 房间名称
-        name,
+        _name,
         // 房间头像
-        avatar,
+        _avatar,
         // 房间人员数
-        membercount,
+        _membercount,
         // 两人对话，的人员名称
-        member_1name
+        _member_1name
     };
 
-    RoomDBModel();
+
+
 
     QVariant data(const QModelIndex &index, int role) const override;
 
@@ -56,22 +92,18 @@ public:
 
     void refresh();
 
-    Q_INVOKABLE void insert(QMatrixClient::Room *room,QMatrixClient::Connection *connection);
+    void initModel();
 
-
-
-
+    // 插入房间信息
+    Q_INVOKABLE void insert(QMatrixClient::Room *room, QMatrixClient::Connection *connection);
     // 加载房间
     Q_INVOKABLE void loadRoom();
     // 加载好友
     Q_INVOKABLE void loadBuddy();
 
+private:
     // 检查房间是否存在
     bool checkRoomExists(QString roomid);
-
-
-
-private:
 };
 
 #endif // ROOMDBMODEL_H

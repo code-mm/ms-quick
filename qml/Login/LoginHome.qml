@@ -91,6 +91,11 @@ Flipable {
                     text: "记住密码"
                     onCheckStateChanged: {
                         im.setSavePasswordStatus(field.usernametext,checkBoxSavePassword.checked)
+
+                        if(!checkBoxSavePassword.checked){
+                            checkBoxAutoLogin.checked=false
+                        }
+
                     }
                 }
                 CheckBox {

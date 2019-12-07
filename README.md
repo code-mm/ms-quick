@@ -9,7 +9,6 @@
 
 https://matrix.org/
 
-
 - sdk
 
 https://github.com/quotient-im/libQuotient
@@ -21,3 +20,8 @@ https://github.com/aeagean/QtNetworkService
 - 持续集成
 
 https://github.com/jaredtao/HelloActions-Qt
+
+
+- emoji
+
+https://emojipedia.org/

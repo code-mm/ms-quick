@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>media/message.mp3</file>
+    </qresource>
+</RCC>

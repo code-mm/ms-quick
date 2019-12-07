@@ -31,12 +31,12 @@
 
 
 #include "../Utils/systemutils.h"
-#include "roommodel.h"
 #include "message.h"
 #include "../common.h"
 #include "userdb.h"
 #include "messagedbmodel.h"
 #include "roomdbmodel.h"
+#include "roommemberdbmodel.h"
 
 
 
@@ -65,11 +65,6 @@ public:
     void setQuickView(QQuickView *view);
     void setQmlObject(QObject *object);
     void setQmlContext(QQmlContext *qmlContext);
-
-
-
-
-
     // 语音通话
     void voice(QString sdp);
     // 发送语音
@@ -121,22 +116,26 @@ private:
     // 存储用户信息的数据库
     UserDB userDb;
 
-    // 用户名
-    QString mUsername;
-    // 密码
-    QString mPassword;
     // 数据库RoomModel
     RoomDBModel *roomDbModel;
 
     // 数据库消息MODEL
     MessageDBModel *messageDbModel;
 
+    RoomMemberDBModel *roomMemberDbModel;
+
+    // 用户名
+    QString mUsername;
+    // 密码
+    QString mPassword;
+    // 用户ID
+    QString mUserid;
+    // 用户ACCESS_TOKEN
+    QString mAccessToken;
     // 保存密码
     bool mSavePassword=false;
-
     // 自动登录
     bool mAutoLogin=false;
-
     // 点击取消登录按钮后， 不在登录 true 不登录，false 登录
     bool mCancelLogin=false;
 

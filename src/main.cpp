@@ -4,6 +4,9 @@
 #include <QQmlApplicationEngine>
 #include <QtWebEngine>
 #include <QQmlEngine>
+
+#include <QSharedMemory>
+
 #include "Logger/Logger.h"
 
 #include "appquickview.h"
@@ -14,6 +17,15 @@ int main(int argc, char *argv[])
     QtWebEngine::initialize();
     QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication app(argc, argv);
+
+    QSharedMemory shareMenory;
+    // 使程序只有一个实例
+    QSharedMemory shared("ms-app");
+    if (shared.attach())
+    {
+        return 0;
+    }
+    shared.create(1);
 
     app.setOrganizationName("ms");
     app.setOrganizationDomain("com");

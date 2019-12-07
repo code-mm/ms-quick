@@ -5,49 +5,55 @@
 #include <QDate>
 #include <QDateTime>
 
-enum TYPE{
-
+enum TYPE {
     // 文本信息
-    _TEXT,
+            _TEXT,
     // 文件
-    _FILE,
+            _FILE,
     // 表情
-    _EMAJO,
+            _EMAJO,
     //
-
 };
 
 
-class Message
-{
+class Message {
 public:
     Message();
 
     QString getRoomid() const;
+
     void setRoomid(const QString &value);
 
     QString getSender() const;
+
     void setSender(const QString &value);
 
     QString getMessage() const;
+
     void setMessage(const QString &value);
 
     TYPE getType() const;
+
     void setType(const TYPE &value);
 
     QDateTime getDateTime() const;
+
     void setDateTime(const QDateTime &value);
 
     bool getIsMe() const;
+
     void setIsMe(bool value);
 
     bool getIsRead() const;
+
     void setIsRead(bool value);
 
     bool getIsMessageSendSuccess() const;
+
     void setIsMessageSendSuccess(bool value);
 
     QString getEventId() const;
+
     void setEventId(const QString &value);
 
 private:

@@ -2,124 +2,55 @@
 
 UserDB::UserDB()
 {
-    if(QSqlDatabase::database().tables().contains("_user"))
+    if (QSqlDatabase::database().tables().contains(_TABLE_NAME_))
     {
-        qDebug()<<"_user 连接成功";
+        qDebug() << _TABLE_NAME_ << " 连接成功 ";
         return;
-    }else
+    } else
     {
-        qDebug()<<"_user 连接失败，创建表";
-        createTable();
-    }
-}
-void UserDB::insert(QString username, QString password)
-{
-    bool exists = checkUserExists(username);
-    if(exists)
-    {
-        LogUtils::i(" 账号已经存在更新 ");
-        // 存在更新
+        qDebug() << _TABLE_NAME_ << " 连接失败，创建表 ";
         QSqlQuery sqlQuery;
-        QString sql = "update _user set username='"+username+"', password =  '"+password+"'  where username= '"+username+"'";
-        sqlQuery.exec(sql);
-    }
-    else
-    {
-        LogUtils::i(" 账号不存在插入数据 ");
-        // 不存在 插入数据
-        QSqlQuery sqlQuery;
-        QString sql = "insert into _user(username, password) values ('"+username+"','"+password+"')";
-        sqlQuery.exec(sql);
+
+        qDebug() << "sql : " << _CREATE_TABLE_USER_;
+
+        if (sqlQuery.exec(_CREATE_TABLE_USER_))
+        {
+            qDebug() <<_TABLE_NAME_<< " 创建成功";
+        } else
+        {
+            qDebug() << _TABLE_NAME_ <<" 创建失败";
+            qDebug() << sqlQuery.lastError().text();
+        }
     }
 }
 
-
-void UserDB::insert(QString username,QString password,bool savePassword,bool autoLogin)
+// 检查用户是否存在
+bool UserDB::checkUserExists(QString username)
 {
-    qDebug()<<"UserDB::insert(QString username,QString password,bool savePassword,bool autoLogin)";
-    bool exists = checkUserExists(username);
-    qDebug()<<"用户是否存在"<<exists;
-    // 自动登录
-    if(autoLogin)
+    QSqlQuery result;
+    QString sql = "select _username from _user";
+    result.exec(sql);
+    QList<QString> list;
+    while (result.next())
     {
-        qDebug()<<"自动登录";
-        // 如果自动登录，保存密码
-        if(exists)
+        QString uname = result.value(0).toString();
+        list.append(uname);
+    }
+    for (QString it: list)
+    {
+        if (it == username)
         {
-            LogUtils::i(" 账号已经存在更新 ");
-            // 存在更新
-            QSqlQuery sqlQuery;
-            QString sql = "update _user set username='"+username+"', password =  '"+password+"' ,autologin = 1 where username= '"+username+"'";
-            sqlQuery.exec(sql);
-        }
-        else
-        {
-            LogUtils::i(" 账号不存在插入数据 ");
-            // 不存在 插入数据
-            QSqlQuery sqlQuery;
-
-            QString sql = "insert into _user(username, password,autologin) values ('"+username+"','"+password+"',1)";
-
-            qDebug()<< " 自动登录sql : "<<sql;
-            if(sqlQuery.exec(sql))
-            {
-                qDebug()<< " 插入成功 ";
-            }
-            else
-            {
-                qDebug()<< " 插入错误 "<< sqlQuery.lastError().text();
-            }
+            return true;
         }
     }
-    else
-    {
-        qDebug()<<"不自动登录";
-        // 不自动登录
-        if(savePassword)
-        {
-            // 保存 密码
-            if(exists)
-            {
-                LogUtils::i(" 账号已经存在更新 ");
-                // 存在更新
-                QSqlQuery sqlQuery;
-                QString sql = "update _user set username='"+username+"', password =  '"+password+"'  where username= '"+username+"'";
-                sqlQuery.exec(sql);
-            }
-            else
-            {
-                LogUtils::i(" 账号不存在插入数据 ");
-                // 不存在 插入数据
-                QSqlQuery sqlQuery;
-                QString sql = "insert into _user(username, password) values ('"+username+"','"+password+"')";
-                sqlQuery.exec(sql);
-            }
-        }else{
-
-            // 不保存密码
-            if(exists)
-            {
-                LogUtils::i(" 账号已经存在更新 ");
-                // 存在更新
-                QSqlQuery sqlQuery;
-                QString sql = "update _user set username='"+username+"' where username= '"+username+"'";
-                sqlQuery.exec(sql);
-            }
-            else
-            {
-                LogUtils::i(" 账号不存在插入数据 ");
-                // 不存在 插入数据
-                QSqlQuery sqlQuery;
-                QString sql = "insert into _user(username) values ('"+username+"')";
-                sqlQuery.exec(sql);
-            }
-        }
-    }
+    return false;
 }
+
+
 
 QList<User *> UserDB::queryByUserInfo()
 {
-    QSqlQuery result ;
+    QSqlQuery result;
 
     result.exec("select * from _user");
 
@@ -134,41 +65,39 @@ QList<User *> UserDB::queryByUserInfo()
         // 用户名
         QString username = result.value(1).toString();
         // 密码
-        QString password =  result.value(2).toString();
+        QString password = result.value(2).toString();
         // 用户ID
-        QString userid =  result.value(3).toString();
+        QString userid = result.value(3).toString();
         // 用户TOKEN
-        QString access_token=result.value(4).toString();
+        QString access_token = result.value(4).toString();
         // 保存密码
-        int savePassword =result.value(5).toInt();
+        int savePassword = result.value(5).toInt();
         // 自动登录
-        int autoLogin= result.value(6).toInt();
+        int autoLogin = result.value(6).toInt();
         // 时间
         int _datetime = result.value(7).toInt();
 
         User *user = new User();
 
-        user->setId(id );
-        user->setUserid(userid );
+        user->setId(id);
+        user->setUserid(userid);
         user->setUsername(username);
         user->setPassword(password);
 
 
-        if(autoLogin==0)
+        if (autoLogin == 0)
         {
             user->setAutoLogin(false);
-        }
-        else
+        } else
         {
             user->setAutoLogin(true);
         }
 
 
-        if(savePassword==0)
+        if (savePassword == 0)
         {
             user->setSavePassword(false);
-        }
-        else
+        } else
         {
             user->setSavePassword(true);
         }
@@ -178,69 +107,21 @@ QList<User *> UserDB::queryByUserInfo()
     return list;
 }
 
-void UserDB::createTable()
-{
-    QSqlQuery sqlQuery;
-    QString sql =  "create table if not exists _user"
-                  " ("
-                  " id           integer primary key autoincrement , "
-                  " username     varchar(64) , "
-                  " password     varchar(64) , "
-                  " userid       varchar(64) , "
-                  " access_token varchar(256) , "
-                  " savepassword integer , "
-                  " autologin    integer ,"
-                  " _datetime    integer "
-                  ")";
 
-    qDebug()<< "sql : "<<sql;
-
-    if(sqlQuery.exec(sql))
-    {
-        qDebug()<<"_user 创建成功";
-    }else
-    {
-        qDebug()<<"_user 创建失败";
-        qDebug()<<sqlQuery.lastError().text();
-    }
-}
-
-
-
-// 检查用户是否存在
-bool UserDB::checkUserExists(QString username)
-{
-    QSqlQuery result;
-    QString sql = "select username from _user";
-    result.exec(sql);
-    QList<QString> list;
-    while(result.next())
-    {
-        QString uname= result.value(0).toString();
-        list.append(uname);
-    }
-    for(QString it: list)
-    {
-        if(it==username)
-        {
-            return true;
-        }
-    }
-    return false;
-}
 
 // 修改保存密码状态
 void UserDB::setSavePasswordStatus(QString username, bool status)
 {
     QSqlQuery resule;
-    if(status)
+    if (status)
     {
-        QString sql = "update _user set savepassword = 1, _datetime = "+QString::number(QDateTime::currentDateTime().toTime_t())+" where username = '"+username+"'";
+        QString sql = "update _user set _savepassword = 1, _laster_update_datetime = " +
+                      QString::number(QDateTime::currentDateTime().toTime_t()) + " where _username = '" + username + "'";
         resule.exec(sql);
-    }
-    else
+    } else
     {
-        QString sql = "update _user set savepassword = 0 , _datetime = "+QString::number(QDateTime::currentDateTime().toTime_t())+" where username = '"+username+"'";
+        QString sql = "update _user set _savepassword = 0 , _laster_update_datetime = " +
+                      QString::number(QDateTime::currentDateTime().toTime_t()) + " where _username = '" + username + "'";
         resule.exec(sql);
     }
 }
@@ -248,43 +129,84 @@ void UserDB::setSavePasswordStatus(QString username, bool status)
 // 更新自动登录状态
 void UserDB::setAutoLoginStatus(QString usernamem, bool status)
 {
-    QSqlQuery resule ;
-    if(status)
+    QSqlQuery resule;
+    if (status)
     {
-        QString sql = "update _user set autologin=1 where username = '"+usernamem+"'";
+        QString sql = "update _user set _autologin=1, _laster_update_datetime = " +
+                      QString::number(QDateTime::currentDateTime().toTime_t()) + "where _username = '" + usernamem + "'";
+        resule.exec(sql);
+    } else
+    {
+        QString sql = "update _user set _autologin=0 , _laster_update_datetime = " +
+                      QString::number(QDateTime::currentDateTime().toTime_t()) + "where _username = '" + usernamem + "'";
         resule.exec(sql);
     }
-    else
-    {
-        QString sql = "update _user set autologin=0 where username = '"+usernamem+"'";
-        resule.exec(sql);
-    }
 }
 
-void UserDB::setUserId(QString username, QString userid)
+// 插入数据
+void UserDB::insert(
+    QString username,
+    QString password,
+    QString userid,
+    QString accessToken,
+    bool savePassword,
+    bool autoLogin,
+    int lasterUpdateDateTime,
+    QString baseUrl
+    )
 {
+    QString sql;
     if(checkUserExists(username))
     {
-        // 用户存在
-
-
+        qDebug()<<"已经存在账号，更新";
+        sql  = "update "+_TABLE_NAME_+
+              " set _username = '"+username+"',"
+                                                " set _password = '"+password+"',"
+                           " set _userid = '"+userid+"',"
+                         " set _access_token = '"+accessToken+"',"
+                              " set _savepassword = "+savePassword+","
+                               " set _autologin = "+autoLogin+","
+                            " set _laster_update_datetime = "+lasterUpdateDateTime+","
+                                       " set _base_server = '"+baseUrl+"'"
+                          " where _username = '"+username+"'";
     }
     else
     {
+        qDebug()<<"不存在账号插入";
+        sql  = "insert into "+_TABLE_NAME_+
+              "("
+              " _username,"
+              " _password,"
+              " _userid,"
+              " _access_token,"
+              " _savepassword,"
+              "_autologin,"
+              "_laster_update_datetime,"
+              "_base_server"
+              ")"
+              "values"
+              "("
+              "'"+username+"',"
+                           "'"+password+"',"
+                           "'"+userid+"',"
+                         "'"+accessToken+"',"
+                              ""+QString::number(savePassword)+","
+                                                ""+QString::number(autoLogin)+","
+                                             ""+QString::number(lasterUpdateDateTime)+","
+                                                        "'"+baseUrl+"'"
+                          ")";
+
 
     }
-}
 
-void UserDB::setAccessToken(QString username, QString accessToken)
-{
-    if(checkUserExists(username))
+    qDebug()<<" sql : "<<sql;
+    QSqlQuery resule;
+    if(resule.exec(sql))
     {
-        // 用户存在
+        qDebug()<< "插入成功";
     }
     else
     {
-
+        qDebug()<< "插入失败 "<< resule.lastError().text() ;
     }
 }
-
-
