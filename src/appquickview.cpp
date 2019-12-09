@@ -71,9 +71,14 @@ AppQuickView::AppQuickView()
     this->rootContext()->setContextProperty("homeLeftMenuModel", QVariant::fromValue(homeLeftMenuModelList));
     this->rootContext()->setContextProperty("rootWindow", this);
 
+    // 注册 im 操作
     im = new IM();
     im->setQuickView(this);
     this->rootContext()->setContextProperty("im", im);
+
+    // 注册剪切板
+    clipboard= new Clipboard();
+    this->rootContext()->setContextProperty("clipboard", clipboard);
 
 }
 

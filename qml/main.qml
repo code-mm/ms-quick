@@ -5,6 +5,8 @@ import Qt.labs.platform 1.1
 import QtQuick.Layouts 1.3
 import "qrc:/qml/Home"
 import "qrc:/qml/Login"
+
+
 Item{
 
     objectName: "itemMainRootObject"
@@ -34,6 +36,7 @@ Item{
         parent: itemMainRoot.overlay
         font.pixelSize: 14
     }
+
 
 
     // 登录界面
@@ -82,4 +85,12 @@ Item{
     Tray{
 
     }
+
+    NotificationBox{
+
+        id:notificationBox
+
+    }
+
+
 }

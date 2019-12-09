@@ -25,3 +25,8 @@ https://github.com/jaredtao/HelloActions-Qt
 - emoji
 
 https://emojipedia.org/
+
+
+- 剪切板
+
+https://blog.csdn.net/weixin_43810973/article/details/85641013

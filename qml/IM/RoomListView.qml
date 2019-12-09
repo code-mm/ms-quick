@@ -5,6 +5,8 @@ import QtQuick.Layouts 1.12
 import QtQuick.Controls 2.12
 
 import "../Home"
+import "../BasicComponent/Button"
+import "../BasicComponent/PopupFrame"
 // 房间列表
 
 Rectangle {
@@ -22,6 +24,23 @@ Rectangle {
     property string mRoomId;
     // 任务
     property bool task: false
+
+
+    PopupFrame {
+        id: popupFrameInfoData
+        x: 20
+        y: 20
+        nowPoint: Qt.point(20,20)
+        width: 300
+        height: 480
+        title: "资料"
+        PopupFrameContentItem {
+            Text {
+                anchors.centerIn: parent
+                text: " 房间ID : "+mRoomId
+            }
+        }
+    }
 
     // 房间列表
     Row {
@@ -127,6 +146,53 @@ Rectangle {
                                 }
                             }
 
+                            // 右键菜单
+                            ListMenuRight{
+                                backgroundWidth: 100
+                                backgroundHeight: 120
+                                id:listMenuRight
+                                contentItem: ListView {
+                                    id: langListView
+                                    anchors.fill: parent
+                                    anchors.margins: 2
+                                    spacing: 4
+                                    clip: true
+                                    model: ListModel{
+                                        ListElement{
+                                            name : "查看资料"
+                                        }
+                                        ListElement{
+                                            name : "复制ID"
+                                        }
+                                        ListElement{
+                                            name : "删除"
+                                        }
+                                    }
+                                    delegate: TextButton {
+                                        width: langListView.width
+                                        height: 36
+                                        text: modelData
+                                        color: containsMouse ? "lightgray" : listMenuRight.barColor
+                                        onClicked: {
+                                            // 点击之后让面板隐藏
+                                            listMenuRight.hide()
+
+                                            if(index==0)
+                                            {
+                                                popupFrameInfoData.open();
+                                            }else if(index == 1)
+                                            {
+                                                // 复制房间ID
+                                                clipboard.setText(mRoomId)
+                                            }else if(index == 2)
+                                            {
+
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
                             states: State {
                                 name: "Current"
                                 when: listViewRoomList.isCurrentItem
@@ -137,12 +203,26 @@ Rectangle {
                             }
                             MouseArea {
                                 anchors.fill: parent
+                                acceptedButtons: Qt.LeftButton | Qt.RightButton // 激活右键（别落下这个）
                                 onDoubleClicked: {
 
                                 }
                                 onClicked: {
                                     listViewRoomList.currentIndex = index;
                                     mRoomId=_roomid;
+                                    if (mouse.button == Qt.RightButton) { // 右键菜单
+                                        //
+                                        // 鼠标按下的 x y 坐标
+                                        console.log("x : "+mouse.x)
+                                        console.log("y : "+mouse.y)
+
+                                        // 赋值给 启始 位置的x y 坐标
+                                        listMenuRight.startX= mouse.x
+                                        listMenuRight.startY= mouse.y
+
+                                        // 显示右键菜单
+                                        listMenuRight.show();
+                                    }
 
                                     messageDbModel.slotsSelectRoom(_roomid);
                                     roomMemberDbModel.slotsLoadrMember(_roomid);
@@ -186,7 +266,6 @@ Rectangle {
                     }
                 }
 
-
                 // 消息列表
                 ListView {
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -219,10 +298,6 @@ Rectangle {
                                 width: Math.min(messageText.implicitWidth + 24, listView.width - avatar.width - messageRow.spacing)
                                 height: messageText.implicitHeight + 24
                                 color: sentByMe ? "lightgrey" : "steelblue"
-
-
-
-
 
                                 Label {
                                     id: messageText
@@ -260,6 +335,7 @@ Rectangle {
                         width: parent.width
                         height: parent.height
                         // 发送文件，语音，视频，表情选择的那一栏
+
                         Rectangle{
                             width: parent.width
                             height: parent.height/6
@@ -321,7 +397,7 @@ Rectangle {
                         // 消息输入框
                         Rectangle{
                             width: parent.width
-                            height: parent.height/6*4
+                            height: parent.height/6*3
                             anchors.horizontalCenter: parent.horizontalCenter
                             color: "#adadda"
                             TextArea {
@@ -350,6 +426,7 @@ Rectangle {
                                     // 发送消息
                                     im.sendMessage(mRoomId,textAreaMessage.text)
                                     textAreaMessage.text=''
+                                    notificationBox.notify("发送成功")
 
                                 }
                             }
@@ -392,7 +469,6 @@ Rectangle {
                                 width: parent.width
                                 height: 40
 
-
                                 Row{
                                     width: parent.width
                                     height: parent.height
@@ -400,7 +476,6 @@ Rectangle {
                                         width: 50
                                         height: parent.height
                                         color: "transparent"
-
 
                                         Image {
                                             source: "qrc:/images/img_default.png"
@@ -411,16 +486,13 @@ Rectangle {
                                         }
                                     }
 
-
                                     Label {
                                         anchors.leftMargin: 10
                                         anchors.verticalCenter:  parent.verticalCenter
                                         text: _name
                                         font: font.pixelSize=15
                                     }
-
                                 }
-
 
                                 states: State {
                                     name: "Current"

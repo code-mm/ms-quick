@@ -4,11 +4,10 @@
 #include <QQmlApplicationEngine>
 #include <QtWebEngine>
 #include <QQmlEngine>
-
 #include <QSharedMemory>
 
-#include "Logger/Logger.h"
 
+#include "Logger/Logger.h"
 #include "appquickview.h"
 
 

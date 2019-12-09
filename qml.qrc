@@ -30,5 +30,12 @@
         <file>qml/Home/PersonalInformation.qml</file>
         <file>qml/Home/TeaDrink.qml</file>
         <file>qml/IM/Navigation.qml</file>
+        <file>qml/IM/ListMenuRight.qml</file>
+        <file>qml/NotificationBox.qml</file>
+        <file>qml/BasicComponent/Button/TextButton.qml</file>
+        <file>qml/BasicComponent/PopupFrame/CustomMouseArea.qml</file>
+        <file>qml/BasicComponent/PopupFrame/PopupFrame.qml</file>
+        <file>qml/BasicComponent/PopupFrame/PopupFrameContentItem.qml</file>
+        <file>qml/BasicComponent/PopupFrame/qmldir</file>
     </qresource>
 </RCC>

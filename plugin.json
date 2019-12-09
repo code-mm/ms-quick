@@ -1,0 +1,10 @@
+[{
+    name: "邮件",
+    desc: "邮件管理器",
+    path: "插件位置",
+    icon_local: "icon 本地",
+    icon_remotely: "icon 远程",
+    version_code: "版本号",
+    version_name: "版本名称",
+    status: "dev"
+}]

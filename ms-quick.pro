@@ -32,6 +32,7 @@ SOURCES += \
         src/IM/roommemberdbmodel.cpp \
         src/IM/user.cpp \
         src/IM/userdb.cpp \
+        src/SystemFeatures/clipboard.cpp \
         src/Utils/logutils.cpp \
         src/Utils/systemutils.cpp \
         src/appquickview.cpp \
@@ -66,6 +67,7 @@ HEADERS += \
     src/IM/sqlconstant.h \
     src/IM/user.h \
     src/IM/userdb.h \
+    src/SystemFeatures/clipboard.h \
     src/Utils/logutils.h \
     src/Utils/systemutils.h \
     src/appquickview.h \
@@ -79,4 +81,5 @@ HEADERS += \
 
 include(libs/libQuotient/libqmatrixclient.pri)
 include(libs/QtNetworkService/QtNetworkService.pri)
+
 

@@ -13,6 +13,7 @@
 #include "homeleftmenumodel.h"
 
 #include "IM/im.h"
+#include "SystemFeatures/clipboard.h"
 class AppQuickView : public QQuickView
 {
 public:
@@ -24,6 +25,9 @@ private slots :
 private:
 
     IM *im ;
+
+    Clipboard * clipboard;
+
     // 数据库
     QSqlDatabase database;
 };
