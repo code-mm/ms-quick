@@ -37,5 +37,6 @@
         <file>qml/BasicComponent/PopupFrame/PopupFrame.qml</file>
         <file>qml/BasicComponent/PopupFrame/PopupFrameContentItem.qml</file>
         <file>qml/BasicComponent/PopupFrame/qmldir</file>
+        <file>qml/Emoji/EmojiPicker.qml</file>
     </qresource>
 </RCC>

@@ -4,9 +4,12 @@ import QtQuick 2.12
 import QtQuick.Layouts 1.12
 import QtQuick.Controls 2.12
 
+import EmojiModel 0.1
+
 import "../Home"
 import "../BasicComponent/Button"
 import "../BasicComponent/PopupFrame"
+import "../Emoji"
 // 房间列表
 
 Rectangle {
@@ -326,17 +329,26 @@ Rectangle {
                     ScrollBar.vertical: ScrollBar {}
                 }
 
+
+
+
+
+
                 Rectangle{
+                    id:rectangleBottom
                     width: parent.width-50
                     height: parent.height/3-80
                     anchors.horizontalCenter: parent.horizontalCenter
                     color: "#f0f0f0"
+
+
+
                     Column {
                         width: parent.width
                         height: parent.height
                         // 发送文件，语音，视频，表情选择的那一栏
-
                         Rectangle{
+                            id:rectangleMediaunctions
                             width: parent.width
                             height: parent.height/6
                             color: "#f8aa00"
@@ -353,6 +365,14 @@ Rectangle {
                                         width: 20
                                         height: 20
                                         source: "qrc:/images/img_emoji.png"
+
+                                        MouseArea{
+                                            anchors.fill:parent
+                                            onClicked: {
+                                                console.log("表情")
+                                                rectangleEmoji.visible=!rectangleEmoji.visible
+                                            }
+                                        }
                                     }
                                 }
 
@@ -396,18 +416,78 @@ Rectangle {
 
                         // 消息输入框
                         Rectangle{
+                            id: rectangleEditTextFrame
                             width: parent.width
-                            height: parent.height/6*3
+                            height: parent.height/6*4
                             anchors.horizontalCenter: parent.horizontalCenter
                             color: "#adadda"
-                            TextArea {
-                                width: parent.width
-                                height: parent.height
+                            //                            TextArea {
+                            //                                width: parent.width
+                            //                                height: parent.height
+                            //                                id: textAreaMessage
+                            //                                Layout.fillWidth: true
+                            //                                placeholderText: qsTr("请输入消息")
+                            //                                wrapMode: TextArea.Wrap
+                            //                                font: font.pixelSize=15
+                            //                            }
+
+                            Keys.onUpPressed: vbar.decrease()
+                            Keys.onDownPressed: vbar.increase()
+
+                            // 可拖放文本控件
+                            TextEdit{
                                 id: textAreaMessage
-                                Layout.fillWidth: true
-                                placeholderText: qsTr("请输入消息")
-                                wrapMode: TextArea.Wrap
+                                height: parent.height
+                                width: parent.width
+
+                                wrapMode: TextEdit.Wrap
+                                selectByKeyboard: true
+                                selectByMouse: true
                                 font: font.pixelSize=15
+
+                                DropArea{
+                                    anchors.fill: parent
+                                    onDropped: {
+                                        if (drop.hasUrls){
+                                            console.debug("拖放了文件: " + drop.urls.length);
+                                            for(var i = 0; i < drop.urls.length; i++){
+                                                console.debug("文件: " + drop.urls[i]);
+                                                textAreaMessage.append("文件: " + drop.urls[i])
+                                            }
+                                        }
+                                        else if (drop.hasText){
+                                            console.debug("拖放了本文: " + drop.text.length);
+                                            console.debug("文本: " + drop.text);
+                                            textAreaMessage.append("文本: " + drop.text)
+                                        }
+                                    }
+                                }
+
+                                MouseArea{
+                                    anchors.fill: parent
+                                    onWheel: {
+                                        if (wheel.angleDelta.y > 0) {
+                                            vbar.decrease();
+                                        }
+                                        else {
+                                            vbar.increase();
+                                        }
+                                    }
+                                    onClicked: {
+                                        textAreaMessage.forceActiveFocus();
+                                    }
+                                }
+                            }
+                            ScrollBar {
+                                id: vbar
+                                hoverEnabled: true
+                                active: hovered || pressed
+                                orientation: Qt.Vertical
+                                size: rectangleEditTextFrame.height / textAreaMessage.height
+                                width: 10
+                                anchors.top: parent.top
+                                anchors.right: parent.right
+                                anchors.bottom: parent.bottom
                             }
                         }
                         // 发送按钮
@@ -433,6 +513,28 @@ Rectangle {
                         }
                     }
                 }
+
+                // 表情栏
+                Rectangle{
+                    id:rectangleEmoji
+                    width: parent.width-50
+                    height: 230
+                    color: "#ffffff"
+                    anchors.bottom: rectangleBottom.top
+                    anchors.margins: 15
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    visible: false
+                    EmojiPicker {
+                        width: parent.width
+                        height: parent.height
+                        anchors.centerIn: parent
+                        Layout.fillWidth: true
+                        id: emojiPicker
+                        visible: true
+                        textArea: textAreaMessage
+                        emojiModel: EmojiModel { id: emojiModel }
+                    }
+                }
             }
 
             // 最右侧
@@ -440,7 +542,6 @@ Rectangle {
                 width: parent.width/3-100
                 height: parent.height
                 color: "#FFFAF0"
-
 
                 Column{
                     width: parent.width
@@ -450,7 +551,6 @@ Rectangle {
                         anchors.horizontalCenter:  parent.horizontalCenter
                         font: font.pixelSize=25
                     }
-
 
                     // 右侧房间人员
                     ListView{

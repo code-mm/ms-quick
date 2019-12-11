@@ -40,7 +40,8 @@ SOURCES += \
         src/homeleftmenumodel.cpp \
         src/iappplugin.cpp \
         src/main.cpp \
-        src/Logger/Logger.cpp
+        src/Logger/Logger.cpp \
+        src/Emoji/emojimodel.cpp
 
 RESOURCES += qml.qrc \
     images.qrc \
@@ -75,7 +76,8 @@ HEADERS += \
     src/homeleftmenumodel.h \
     src/iappplugin.h \
     src/Logger/Logger.h \
-    src/Logger/LoggerTemplate.h
+    src/Logger/LoggerTemplate.h \
+    src/Emoji/emojimodel.h
 
 
 

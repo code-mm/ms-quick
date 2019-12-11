@@ -30,3 +30,7 @@ https://emojipedia.org/
 - 剪切板
 
 https://blog.csdn.net/weixin_43810973/article/details/85641013
+
+- QML 案例                                             
+
+https://github.com/zhengtianzuo/QtQuickExamples

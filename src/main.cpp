@@ -9,13 +9,15 @@
 
 #include "Logger/Logger.h"
 #include "appquickview.h"
-
+#include "Emoji/emojimodel.h"
 
 int main(int argc, char *argv[])
 {
     QtWebEngine::initialize();
     QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication app(argc, argv);
+
+    qmlRegisterType<EmojiModel>("EmojiModel", 0, 1, "EmojiModel");
 
     QSharedMemory shareMenory;
     // 使程序只有一个实例
