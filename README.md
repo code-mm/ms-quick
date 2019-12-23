@@ -5,32 +5,20 @@
 
 ## 参考或使用项目
 
-- matrix
-
-https://matrix.org/
-
-- sdk
-
-https://github.com/quotient-im/libQuotient
-
-- 网络请求库
-
-https://github.com/aeagean/QtNetworkService
-
-- 持续集成
-
-https://github.com/jaredtao/HelloActions-Qt
 
 
-- emoji
+## 库管理工具 
+    
+    vcpkg
+    https://github.com/microsoft/vcpkg
 
-https://emojipedia.org/
 
+## macos 编译
 
-- 剪切板
+    #DCMAKE_PREFIX_PATH=qt库路径 
+    mkdir out 
+    cd out
+    
+    cmake . -Bbuild -DCMAKE_PREFIX_PATH=/Users/maohuawei/dev/Qt/5.14.0/clang_64/lib/cmake     
 
-https://blog.csdn.net/weixin_43810973/article/details/85641013
-
-- QML 案例                                             
-
-https://github.com/zhengtianzuo/QtQuickExamples
+    cmake --build build
