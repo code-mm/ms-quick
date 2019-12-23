@@ -1,9 +1,10 @@
 # Project exclude paths
-.idea
-.cmake-build-debug/
+.idea/
+cmake-build-debug/
 .vscode/
-.build/
-.out/
-.cmake-build-debug/
-.ms-quick.pro.user
-
+build/
+out/
+cmake-build-debug/
+ms-quick.pro.user
+/build/
+/cmake-build-debug/

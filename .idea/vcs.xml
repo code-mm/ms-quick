@@ -2,8 +2,5 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/libs/QtNetworkService" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/libs/SimpleQmlNotify" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/libs/libQuotient" vcs="Git" />
   </component>
 </project>
